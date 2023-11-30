@@ -1,7 +1,9 @@
 .valid-password-check {
   color: #aeffb6;
+  cursor: default;
 }
 
 .invalid-password-check {
   color: #f58989;
+  cursor: default;
 }

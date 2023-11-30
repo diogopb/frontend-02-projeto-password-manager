@@ -20,6 +20,9 @@ function Form({ onCancel }: FormProps) {
     setButtonEnable(validPassword);
   }
 
+  const valid = 'valid-password-check';
+  const invalid = 'invalid-password-check';
+
   return (
     <form action="">
 
@@ -59,6 +62,36 @@ function Form({ onCancel }: FormProps) {
             handleChangePassword();
           } }
         />
+      </div>
+
+      <div>
+        <p
+          className={ password.length < 8 ? invalid
+            : valid }
+        >
+          Possuir 8 ou mais caracteres
+        </p>
+
+        <p
+          className={ password.length < 16 ? valid
+            : invalid }
+        >
+          Possuir até 16 caracteres
+        </p>
+
+        <p
+          className={ /[a-zA-z]+/.test(password) && /\d/.test(password) ? valid
+            : invalid }
+        >
+          Possuir letras e números
+        </p>
+
+        <p
+          className={ /[!@#$%^&*(),.?":{}|<>]/.test(password) ? valid
+            : invalid }
+        >
+          Possuir algum caractere especial
+        </p>
       </div>
 
       <div>

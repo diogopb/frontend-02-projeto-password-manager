@@ -18,6 +18,7 @@ function Form() {
   const [url, setUrl] = useState('');
   const [buttonEnable, setButtonEnable] = useState(false);
   const [registers, setRegister] = useState<NewRegister[]>([]);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmitForm = (event: React.FormEvent) => {
     event.preventDefault();
@@ -33,6 +34,7 @@ function Form() {
     setPassword('');
     setUrl('');
     setButtonEnable(false);
+    setShowPassword(false);
   };
 
   const validPassword = password.length >= 8
@@ -47,6 +49,10 @@ function Form() {
   const handleRemoveRegister = (index: number) => {
     const registersAtt = registers.filter((_, registerRmv) => registerRmv !== index);
     setRegister(registersAtt);
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -80,7 +86,7 @@ function Form() {
           <div>
             <label htmlFor="Senha">Senha</label>
             <input
-              type="password"
+              type={ showPassword ? 'password' : 'text' }
               name="Senha"
               id="Senha"
               minLength={ 8 }
@@ -138,6 +144,15 @@ function Form() {
             Cadastrar
           </button>
           <button type="button" onClick={ handleEnableForm }>Cancelar</button>
+
+          <label htmlFor="Esconder">Esconder senhas</label>
+          <input
+            type="checkbox"
+            name="Esconder"
+            id="Esconder"
+            checked={ showPassword }
+            onChange={ handleShowPassword }
+          />
         </form>
       )}
       {registers.length === 0 ? (
@@ -149,12 +164,13 @@ function Form() {
               <a href={ register.url }>{register.service}</a>
               <p>
                 Login:
-                {register.login}
+                { register.login }
               </p>
               <p>
                 Senha:
-                {register.password}
+                { showPassword ? '******' : register.password}
               </p>
+
               <button
                 type="button"
                 data-testid="remove-btn"
@@ -164,6 +180,14 @@ function Form() {
               </button>
             </li>
           ))}
+          <label htmlFor="Esconder">Esconder senhas</label>
+          <input
+            type="checkbox"
+            name="Esconder"
+            id="Esconder"
+            checked={ showPassword }
+            onChange={ handleShowPassword }
+          />
         </div>
       )}
     </div>

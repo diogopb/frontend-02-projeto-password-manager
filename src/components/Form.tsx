@@ -44,6 +44,11 @@ function Form() {
   const valid = 'valid-password-check';
   const invalid = 'invalid-password-check';
 
+  const handleRemoveRegister = (index: number) => {
+    const registersAtt = registers.filter((_, registerRmv) => registerRmv !== index);
+    setRegister(registersAtt);
+  };
+
   return (
     <div>
       {!buttonEnable ? (
@@ -150,6 +155,13 @@ function Form() {
                 Senha:
                 {register.password}
               </p>
+              <button
+                type="button"
+                data-testid="remove-btn"
+                onClick={ () => handleRemoveRegister(index) }
+              >
+                Remover cadastro
+              </button>
             </li>
           ))}
         </div>

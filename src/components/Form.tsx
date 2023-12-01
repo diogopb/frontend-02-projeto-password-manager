@@ -86,7 +86,7 @@ function Form() {
           <div>
             <label htmlFor="Senha">Senha</label>
             <input
-              type={ showPassword ? 'password' : 'text' }
+              type={ !showPassword ? 'password' : 'text' }
               name="Senha"
               id="Senha"
               minLength={ 8 }

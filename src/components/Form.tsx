@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import trashImg from '../images/trash-img.svg'; // Importe o ícone de lixeira
+import eyeOpenImg from '../images/eye-open.svg'; // Importe o ícone de olho aberto
+import eyeClosedImg from '../images/eye-closed.svg'; // Importe o ícone de olho fechado
 
 type NewRegister = {
   service: string;
@@ -37,159 +40,204 @@ function Form() {
     setShowPassword(false);
   };
 
-  const validPassword = password.length >= 8
-    && password.length <= 16
-    && /[a-zA-z]+/.test(password)
-    && /\d/.test(password)
-    && /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const validatePasswordLength = () => {
+    return password.length >= 8 && password.length <= 16;
+  };
+
+  const validatePasswordLettersAndNumbers = () => {
+    return /[a-zA-Z]+/.test(password) && /\d/.test(password);
+  };
+
+  const validatePasswordSpecialCharacters = () => {
+    return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  };
+
+  const validPassword = validatePasswordLength()
+    && validatePasswordLettersAndNumbers()
+    && validatePasswordSpecialCharacters();
 
   const valid = 'valid-password-check';
   const invalid = 'invalid-password-check';
 
   const handleRemoveRegister = (index: number) => {
-    const registersAtt = registers.filter((_, registerRmv) => registerRmv !== index);
-    setRegister(registersAtt);
+    const updatedRegisters = registers.filter((_, i) => i !== index);
+    setRegister(updatedRegisters);
   };
 
-  const handleShowPassword = () => {
+  const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   return (
     <div>
       {!buttonEnable ? (
-        <button type="button" onClick={ handleEnableForm }>Cadastrar nova senha</button>
-      ) : (
-        <form onSubmit={ handleSubmitForm }>
-          <div>
-            <label htmlFor="Service">Nome do serviço</label>
-            <input
-              type="text"
-              name="Service"
-              id="Service"
-              value={ service }
-              onChange={ (event) => setService(event.target.value) }
-            />
-          </div>
-
-          <div>
-            <label htmlFor="Login">Login</label>
-            <input
-              type="text"
-              name="Login"
-              id="Login"
-              value={ login }
-              onChange={ (event) => setLogin(event.target.value) }
-            />
-          </div>
-
-          <div>
-            <label htmlFor="Senha">Senha</label>
-            <input
-              type={ !showPassword ? 'password' : 'text' }
-              name="Senha"
-              id="Senha"
-              minLength={ 8 }
-              maxLength={ 16 }
-              value={ password }
-              onChange={ (event) => {
-                setPassword(event.target.value);
-              } }
-            />
-          </div>
-
-          <div>
-            <p className={ password.length < 8 ? invalid : valid }>
-              Possuir 8 ou mais caracteres
-            </p>
-
-            <p className={ password.length < 16 ? valid : invalid }>
-              Possuir até 16 caracteres
-            </p>
-
-            <p
-              className={
-                /[a-zA-z]+/.test(password) && /\d/.test(password)
-                  ? valid
-                  : invalid
-              }
-            >
-              Possuir letras e números
-            </p>
-
-            <p
-              className={
-                /[!@#$%^&*(),.?":{}|<>]/.test(password) ? valid : invalid
-              }
-            >
-              Possuir algum caractere especial
-            </p>
-          </div>
-
-          <div>
-            <label htmlFor="URL">URL</label>
-            <input
-              type="text"
-              name="URL"
-              id="URL"
-              value={ url }
-              onChange={ (event) => setUrl(event.target.value) }
-            />
-          </div>
-
+        <div className="bg-stone-200 min-h-screen flex items-center justify-center">
           <button
-            type="submit"
-            disabled={ !validPassword || !service || !login }
+            className="bg-black text-white p-2 rounded-lg m-1 w-96 text"
+            type="button"
+            onClick={ handleEnableForm }
           >
-            Cadastrar
+            Register new password
           </button>
-          <button type="button" onClick={ handleEnableForm }>Cancelar</button>
-
-          <label htmlFor="Esconder">Esconder senhas</label>
-          <input
-            type="checkbox"
-            name="Esconder"
-            id="Esconder"
-            checked={ showPassword }
-            onChange={ handleShowPassword }
-          />
-        </form>
-      )}
-      {registers.length === 0 ? (
-        <p>Nenhuma senha cadastrada</p>
+        </div>
       ) : (
-        <div>
-          {registers.map((register, index) => (
-            <li key={ index }>
-              <a href={ register.url }>{register.service}</a>
-              <p>
-                Login:
-                { register.login }
-              </p>
-              <p>
-                Senha:
-                { showPassword ? '******' : register.password}
+        <div className="bg-stone-200 min-h-screen flex items-center justify-center">
+          <form
+            onSubmit={ handleSubmitForm }
+            className="bg-white px-10 py-10 rounded-xl shadow-lg flex flex-col gap-4 w-96 text-center justify-center"
+          >
+            <h1 className="text-2xl font-bold mb-4">Password Manager</h1>
+
+            <fieldset className="relative">
+              <div>
+                <input
+                  placeholder="Service Name"
+                  type="text"
+                  name="Service"
+                  id="Service"
+                  value={ service }
+                  onChange={ (event) => setService(event.target.value) }
+                  className="w-full display-block bg-black text-white p-2 rounded-lg m-1 text-center"
+                />
+              </div>
+
+              <div>
+                <input
+                  placeholder="Login"
+                  type="text"
+                  name="Login"
+                  id="Login"
+                  value={ login }
+                  onChange={ (event) => setLogin(event.target.value) }
+                  className="w-full display-block bg-black text-white p-2 rounded-lg m-1 text-center"
+                />
+              </div>
+
+              <div className="relative">
+                <input
+                  placeholder="Password"
+                  type={ showPassword ? 'text' : 'password' }
+                  name="Senha"
+                  id="Senha"
+                  minLength={ 8 }
+                  maxLength={ 16 }
+                  value={ password }
+                  onChange={ (event) => setPassword(event.target.value) }
+                  className="w-full text-center block bg-black text-white p-2 rounded-lg m-1 pr-10"
+                />
+                <img
+                  src={ showPassword ? eyeClosedImg : eyeOpenImg }
+                  alt="Toggle Password Visibility"
+                  className="absolute right-3 top-3 cursor-pointer"
+                  onClick={ handleTogglePasswordVisibility }
+                />
+              </div>
+            </fieldset>
+
+            <div>
+              <p className={ password.length < 8 ? invalid : valid }>
+                Have 8 or more characters
               </p>
 
+              <p className={ password.length <= 16 ? valid : invalid }>
+                Have up to 16 characters
+              </p>
+
+              <p className={ validatePasswordLettersAndNumbers() ? valid : invalid }>
+                Have letters and numbers
+              </p>
+
+              <p className={ validatePasswordSpecialCharacters() ? valid : invalid }>
+                Have some special character
+              </p>
+            </div>
+
+            <div className="grid grid-flow-col gap-x-2">
+              <input
+                type="text"
+                name="URL"
+                id="URL"
+                value={ url }
+                placeholder="URL"
+                onChange={ (event) => setUrl(event.target.value) }
+                className="w-full text-center bg-black text-white p-2 rounded-lg"
+              />
+            </div>
+
+            <fieldset className="flex justify-between">
+              <button
+                type="submit"
+                disabled={ !validPassword || !service || !login }
+                className="w-full display-block bg-green-500 text-white p-2 rounded-lg shadow-2xl"
+              >
+                Register
+              </button>
               <button
                 type="button"
-                data-testid="remove-btn"
-                onClick={ () => handleRemoveRegister(index) }
+                onClick={ handleEnableForm }
+                className="w-full display-block bg-red-500 text-white p-2 rounded-lg shadow"
               >
-                Remover cadastro
+                Cancel
               </button>
-            </li>
-          ))}
-          <label htmlFor="Esconder">Esconder senhas</label>
-          <input
-            type="checkbox"
-            name="Esconder"
-            id="Esconder"
-            checked={ showPassword }
-            onChange={ handleShowPassword }
-          />
+            </fieldset>
+
+            <fieldset className="flex justify-between items-center">
+              <input
+                type="checkbox"
+                name="Esconder"
+                id="Esconder"
+                className="accent-black text-sm"
+              />
+              <label className="mr-20 text-sm flex items-center" htmlFor="Esconder">
+                Remember me
+              </label>
+
+              <a href="https://www.google.com" className="text-green-500 text-sm">
+                Forgot password?
+              </a>
+            </fieldset>
+
+          </form>
         </div>
       )}
+      {registers.length === 0 ? (
+        <div className="bg-stone-200 flex items-center justify-center">
+          <p className="bg-white px-5 py-2 rounded-xl shadow-lg flex flex-col gap-4 w-96 text-center justify-center">
+            No password registered
+          </p>
+        </div>
+      ) : (
+        <div className="bg-stone-200 flex items-center justify-center">
+          <div className="bg-black text-white px-5 py-2 rounded-xl shadow-lg flex flex-col gap-4 w-96 text-center justify-center">
+            {registers.map((register, index) => (
+              <li key={ index }>
+                <a href={ register.url }>{register.service}</a>
+                <p>
+                  Login:
+                  {' '}
+                  {register.login}
+                </p>
+                <p>
+                  Password:
+                  {' '}
+                  {showPassword ? '******' : register.password}
+                </p>
+
+                <button
+                  type="button"
+                  data-testid="remove-btn"
+                  onClick={ () => handleRemoveRegister(index) }
+                >
+                  <img src={ trashImg } alt="Remove" />
+                  {' '}
+                  {/* Utiliza o ícone de lixeira */}
+                </button>
+              </li>
+            ))}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

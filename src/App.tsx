@@ -5,8 +5,15 @@ import Form from './components/Form';
 function App() {
   return (
     <div>
-      <h1>Gerenciador de senhas</h1>
-      <Form />
+      <div
+        className="bg-stone-200
+        shadow-lg flex flex-col font-bold py-4 text-5xl"
+      >
+        <h1>Password Manager</h1>
+      </div>
+      <div>
+        <Form />
+      </div>
     </div>
   );
 }
